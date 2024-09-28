@@ -7,7 +7,7 @@ const StoreContextProvider=(props)=> {
 
 const [cartItems,setcartItems]=useState({})
 
-const url="http://localhost:4000"
+const url="https://food-del-ezo0.onrender.com" //render backend url for local use port 4000
 
 const [token,setToken]=useState("");
 
