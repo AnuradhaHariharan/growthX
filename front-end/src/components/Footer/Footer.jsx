@@ -12,9 +12,21 @@ const Footer = () => {
             At Tomato, we believe in bringing the freshest ingredients and bold flavors to your table. Our passion for culinary excellence and commitment to quality ensure every bite is an unforgettable experience. Join us on a delicious journey!
         </p>
         <div className="footer-social-icons">
-            <img src={assets.facebook_icon} alt="" />
-            <img src={assets.twitter_icon} alt="" />
-            <img src={assets.linkedin_icon} alt="" />
+        <img
+  onClick={() => window.location.href = "https://www.linkedin.com/in/anuradhahariharan13/"}
+  src={assets.facebook_icon}
+  alt="search"
+/>
+<img
+  onClick={() => window.location.href = "https://www.linkedin.com/in/anuradhahariharan13/"}
+  src={assets.twitter_icon}
+  alt="search"
+/>
+            <img
+  onClick={() => window.location.href = "https://www.linkedin.com/in/anuradhahariharan13/"}
+  src={assets.linkedin_icon}
+  alt="search"
+/>
         </div>
         </div>
         <div className='footer-content-center'>
