@@ -7,7 +7,7 @@ const Footer = () => {
     <div className='footer' id='footer'>
       <div className="footer-content">
         <div className='footer-content-left'>
-         <img src={assets.logo} alt="" />
+       <h1 className='company'>GrowthX</h1>
          <p>
             At Tomato, we believe in bringing the freshest ingredients and bold flavors to your table. Our passion for culinary excellence and commitment to quality ensure every bite is an unforgettable experience. Join us on a delicious journey!
         </p>

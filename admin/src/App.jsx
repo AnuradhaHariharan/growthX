@@ -1,28 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from './components/Navbar/Navbar'
-import Sidebar from './components/Sidebar/Sidebar'
-import {Routes,Route} from 'react-router-dom'
-import Add from './pages/Add/Add'
-import List from './pages/List/List'
-import Orders from './pages/Orders/Orders'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Footer from './components/Footer/Footer'
+import LoginPopup from './components/LoginPopup/LoginPopup' // Ensure this import exists
+import Home from './pages/home/Home'
 
 const App = () => {
+  const [showLogin, setShowLogin] = useState(false)
+
   return (
-    <div>
-      <ToastContainer/>
-      <Navbar/>
-      <hr />
-      <div className='app-content'>
-        <Sidebar/>
-        <Routes>
-        <Route path="/add" element={<Add/>} />
-        <Route path="/list" element={<List/>} />
-        <Route path="/orders" element={<Orders/>} />
-        </Routes>
+    <>
+      {showLogin && <LoginPopup setShowLogin={setShowLogin} />} {/* Conditionally render LoginPopup */}
+      <div className='app'>
+        <Navbar setShowLogin={setShowLogin} />
+        <Home/>
       </div>
-    </div>
+      <Footer />
+    </>
   )
 }
 

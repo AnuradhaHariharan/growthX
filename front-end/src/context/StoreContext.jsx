@@ -1,89 +1,45 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios"
 
-export const StoreContext= createContext(null)
+export const StoreContext = createContext(null);
 
-    const StoreContextProvider=(props)=> {
+const StoreContextProvider = (props) => {
+    const url = "http://localhost:4000"; // Render backend URL for local use port 4000
 
-    const [cartItems,setcartItems]=useState({})
+    // Initialize state from localStorage
+    const [token, setToken] = useState(localStorage.getItem("token") || "");
+    const [email, setEmail] = useState(localStorage.getItem("email") || "");
 
-    const url="https://food-del-ezo0.onrender.com" //render backend url for local use port 4000
-
-    const [token,setToken]=useState("");
-
-    const [food_list,setFoodList]=useState([])
-
-    const addToCart=async (itemId)=> {
-        if(!cartItems[itemId]){
-            setcartItems((prev)=>({...prev,[itemId]:1}))
+    // Sync token with localStorage
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem("token", token);
+        } else {
+            localStorage.removeItem("token");
         }
-        else {
-            setcartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
+    }, [token]);
+
+    // Sync email with localStorage
+    useEffect(() => {
+        if (email) {
+            localStorage.setItem("email", email);
+        } else {
+            localStorage.removeItem("email");
         }
-        if(token){
-            await axios.post(url+"/api/cart/add",{itemId},{headers:{token}});
-        }
+    }, [email]);
 
-    }
-
-    const removeFromCart=async (itemId)=> {
-    setcartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
-        if(token){
-            await axios.post(url+"/api/cart/remove",{itemId},{headers:{token}})
-        }
-
-    }
-    
-    const getTotalCartAmount=()=>{
-            let totalAmount=0;
-            for(const item in cartItems){
-                if(cartItems[item]>0){
-                let itemInfo=food_list.find((product)=>product._id===item);
-                totalAmount+=itemInfo.price*cartItems[item];
-                }
-            }
-            return totalAmount;
-    }
-
-    const fetchFoodList= async ()=>{
-        const response=await axios.get(url+"/api/food/list")
-        setFoodList(response.data.data)
-        console.log(response.data.data);
-    }
-
-    const loadCartData= async (token)=>{
-        const response=await axios.post(url+"/api/cart/get",{},{headers:{token}})
-        console.log(response);
-            setcartItems(response.data.cartData);
-    }
-
-    useEffect(()=>{
-        async function loadData(){
-            await fetchFoodList();
-        if(localStorage.getItem("token")){
-            setToken(localStorage.getItem("token"))
-            await loadCartData(localStorage.getItem("token"));
-        }
-    } loadData();
-        
-    },[])
-
-    const contextValue={
-    food_list,
-    cartItems,
-    setcartItems,
-    addToCart,
-    removeFromCart,
-    getTotalCartAmount,
-    url,
-    token,
-    setToken
-    }
+    const contextValue = {
+        url,
+        token,
+        setToken,
+        email,
+        setEmail
+    };
 
     return (
         <StoreContext.Provider value={contextValue}>
             {props.children}
         </StoreContext.Provider>
-    )
-}
+    );
+};
+
 export default StoreContextProvider;
