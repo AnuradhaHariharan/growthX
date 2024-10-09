@@ -1,56 +1,81 @@
-import React, { useEffect, useState } from 'react';
-import './Home.css';
-
-const AdminPanel = ({ adminName }) => {
-  const [assignments, setAssignments] = useState([]);
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { StoreContext } from '../../context/StoreContext';
+import './Home.css'
+const Home = () => {
+  const [projects, setProjects] = useState([]); // State to store the fetched projects
+  const { url, email, token } = useContext(StoreContext); // Using email, token, and url from context
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchAssignments = async () => {
+    // Check if the token is present
+    if (!token) {
+      setError('Please log in or create an account.');
+      setLoading(false);
+      return;
+    }
+
+    // Fetch projects when the component mounts
+    const fetchProjects = async () => {
       try {
-        const response = await fetch(`/api/assignments?admin=${adminName}`);  // Adjust endpoint as needed
-        const data = await response.json();
-        setAssignments(data);
-      } catch (error) {
-        console.error('Error fetching assignments:', error);
+       await axios.post(`${url}/api/admin/update`, { email });
+       const response= await axios.post(`${url}/api/admin/getprojects`, { email })
+        console.log(response)
+        if (response.data.success) {
+          setProjects(response.data.projects); // Assuming the API returns project data in 'projects'
+        } else {
+          setError('Failed to fetch projects');
+        }
+      } catch (err) {
+        setError('Error fetching projects');
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchAssignments();
-  }, [adminName]);
+    fetchProjects();
+  }, [email, url, token]);
 
-  const handleAccept = async (id) => {
-    // Logic to accept the assignment
-    console.log(`Accepted assignment ID: ${id}`);
-    // Make a request to the backend to update the assignment status if necessary
+  // Handle approve and reject buttons
+  const handleApprove = (projectId) => {
+    console.log('Approved project ID:', projectId);
+    // Add your approve logic here (e.g., call an API)
   };
 
-  const handleReject = async (id) => {
-    // Logic to reject the assignment
-    console.log(`Rejected assignment ID: ${id}`);
-    // Make a request to the backend to update the assignment status if necessary
+  const handleReject = (projectId) => {
+    console.log('Rejected project ID:', projectId);
+    // Add your reject logic here (e.g., call an API)
   };
+
+  if (loading) {
+    return <p>Loading projects...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
-    <div className='admin-panel'>
-      <h2>Assignments for {adminName}</h2>
-      {assignments.length === 0 ? (
-        <p>No assignments submitted yet.</p>
-      ) : (
-        <ul>
-          {assignments.map((assignment) => (
-            <li key={assignment.id}>
-              <h3>{assignment.name}</h3>
-              <p>Email: {assignment.email}</p>
-              <p>Assignment: {assignment.assignment}</p>
-              <p>Comments: {assignment.comments}</p>
-              <button onClick={() => handleAccept(assignment.id)}>Accept</button>
-              <button onClick={() => handleReject(assignment.id)}>Reject</button>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="homepage">
+      <h1>Admin Projects</h1>
+      <div className="project-list">
+        {projects?.length > 0 ? (
+          projects.map((project) => (
+            <div className="project-card" key={project._id}>
+              <h3>{project.name}</h3>
+              <p>{project.assignment}</p>
+              <p>{project.comments}</p>
+              <button className="approve-button" onClick={() => handleApprove(project._id)}>Approve</button>
+<button className="reject-button" onClick={() => handleReject(project._id)}>Reject</button>
+            </div>
+          ))
+        ) : (
+          <p>No projects found</p>
+        )}
+      </div>
     </div>
   );
 };
 
-export default AdminPanel;
+export default Home;

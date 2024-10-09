@@ -1,35 +1,45 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios"
 
-export const StoreContext= createContext(null)
+export const StoreContext = createContext(null);
 
-    const StoreContextProvider=(props)=> {
+const StoreContextProvider = (props) => {
+    const url = "http://localhost:4000"; // Render backend URL for local use port 4000
 
-    const url="http://localhost:4000" //render backend url for local use port 4000
+    // Initialize state from localStorage
+    const [token, setToken] = useState(localStorage.getItem("token") || "");
+    const [email, setEmail] = useState(localStorage.getItem("email") || "");
 
-    const [token,setToken]=useState("");
-
-    useEffect(()=>{
-        async function loadData(){
-            await fetchFoodList();
-        if(localStorage.getItem("token")){
-            setToken(localStorage.getItem("token"))
-            await loadCartData(localStorage.getItem("token"));
+    // Sync token with localStorage
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem("token", token);
+        } else {
+            localStorage.removeItem("token");
         }
-    } loadData();
-        
-    },[])
+    }, [token]);
 
-    const contextValue={
-    url,
-    token,
-    setToken
-    }
+    // Sync email with localStorage
+    useEffect(() => {
+        if (email) {
+            localStorage.setItem("email", email);
+        } else {
+            localStorage.removeItem("email");
+        }
+    }, [email]);
+
+    const contextValue = {
+        url,
+        token,
+        setToken,
+        email,
+        setEmail
+    };
 
     return (
         <StoreContext.Provider value={contextValue}>
             {props.children}
         </StoreContext.Provider>
-    )
-}
+    );
+};
+
 export default StoreContextProvider;

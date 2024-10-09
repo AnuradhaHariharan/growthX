@@ -78,32 +78,68 @@ const getAllAdmins = async (req, res) => {
 
   const updateAdminProjects = async (req, res) => {
     const { email } = req.body; // Get the admin's email from the request body
+
     try {
         // Fetch all projects
         const projects = await projectModel.find();
+        console.log("All Projects:", projects); // Debugging to ensure projects are fetched
 
         // Find the admin by email
         const admin = await adminModel.findOne({ email });
-
+        
         // Check if the admin exists
         if (!admin) {
             return res.status(404).json({ success: false, message: "Admin not found" });
         }
 
-        // Filter projects that match the admin's name and push them to admin's projectData
-        const matchedProjects = projects.filter(project => project.admin === admin.name);
-        
-        if (matchedProjects.length > 0) {
-            // Push matched projects to admin's projectData array
-            admin.projectData.push(...matchedProjects.map(project => project._id)); // Store only the project IDs
-            await admin.save(); // Save the updated admin document
-        }
+        console.log("Admin found:", admin.name); // Debugging to ensure admin is fetched
 
-        return res.status(200).json({ success: true, message: "Projects updated successfully" });
+        // Filter projects that match the admin's name (case-insensitive comparison)
+        const matchedProjects = projects.filter(
+            project => project.adminName === admin.name
+        );
+
+        console.log("Matched Projects:", matchedProjects); // Debugging to ensure project matching is correct
+
+        if (matchedProjects.length > 0) {
+            // Push the full project objects to admin's projectData array
+            admin.projectData.push(...matchedProjects);
+
+            // Save the updated admin document
+            await admin.save()
+                .then(() => console.log("Admin document saved successfully"))
+                .catch(error => console.error("Error saving admin:", error));
+
+            return res.status(200).json({ success: true, message: "Projects updated successfully" });
+        } else {
+            return res.status(200).json({ success: true, message: "No matching projects found" });
+        }
     } catch (error) {
         console.error("Error updating admin projects:", error);
         return res.status(500).json({ success: false, message: "Failed to update admin projects" });
     }
-  };
-  
- export { adminUser, registerUser, getAllAdmins ,updateAdminProjects};
+};
+ const getAdminAllProjects = async (req, res) => {
+    const { email } = req.body; // Get the admin's email from the request body
+
+    try {
+        // Fetch the admin by email
+        const admin = await adminModel.findOne({ email });
+        
+        // Check if the admin exists
+        if (!admin) {
+            return res.status(404).json({ success: false, message: "Admin not found" });
+        }
+
+        // Assuming the projects are stored in the admin object
+        const projects = admin.projectData; // Adjust this based on your actual schema
+
+        // Return the projects along with a success message
+        return res.status(200).json({ success: true, message: "Projects retrieved successfully", projects });
+        
+    } catch (error) {
+        console.error("Error retrieving admin projects:", error);
+        return res.status(500).json({ success: false, message: "Failed to retrieve admin projects" });
+    }
+};
+ export { adminUser, registerUser, getAllAdmins ,updateAdminProjects ,getAdminAllProjects};
