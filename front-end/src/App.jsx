@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import LoginPopup from './components/LoginPopup/LoginPopup' // Ensure this import exists
-import Home from './pages/home/Home'
+import Home from './pages/Home/Home'
 import Projects from './components/Projects/Projects'
 
 const App = () => {
