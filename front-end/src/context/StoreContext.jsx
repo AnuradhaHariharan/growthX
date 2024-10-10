@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-    const url = "http://localhost:4000"; // Render backend URL for local use port 4000
+    const url = "https://growthx-9jmo.onrender.com"; // Render backend URL for local use port 4000
 
     // Initialize state from localStorage
     const [token, setToken] = useState(localStorage.getItem("token") || "");
