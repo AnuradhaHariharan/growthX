@@ -76,7 +76,7 @@ const getAllAdmins = async (req, res) => {
     }
   };
 
-  const updateAdminProjects = async (req, res) => {
+  const updateAndGetAdminProjects = async (req, res) => {
     const { email } = req.body; // Get the admin's email from the request body
 
     try {
@@ -102,44 +102,34 @@ const getAllAdmins = async (req, res) => {
         console.log("Matched Projects:", matchedProjects); // Debugging to ensure project matching is correct
 
         if (matchedProjects.length > 0) {
-            // Push the full project objects to admin's projectData array
-            admin.projectData.push(...matchedProjects);
+            // Filter out projects that are already in the admin's projectData
+            const newProjects = matchedProjects.filter(
+                newProject => !admin.projectData.some(existingProject => existingProject._id.equals(newProject._id))
+            );
 
-            // Save the updated admin document
-            await admin.save()
-                .then(() => console.log("Admin document saved successfully"))
-                .catch(error => console.error("Error saving admin:", error));
+            if (newProjects.length > 0) {
+                // Push the new project objects to the admin's projectData array
+                admin.projectData.push(...newProjects);
 
-            return res.status(200).json({ success: true, message: "Projects updated successfully" });
-        } else {
-            return res.status(200).json({ success: true, message: "No matching projects found" });
-        }
-    } catch (error) {
-        console.error("Error updating admin projects:", error);
-        return res.status(500).json({ success: false, message: "Failed to update admin projects" });
-    }
-};
- const getAdminAllProjects = async (req, res) => {
-    const { email } = req.body; // Get the admin's email from the request body
-
-    try {
-        // Fetch the admin by email
-        const admin = await adminModel.findOne({ email });
-        
-        // Check if the admin exists
-        if (!admin) {
-            return res.status(404).json({ success: false, message: "Admin not found" });
+                // Save the updated admin document
+                await admin.save()
+                    .then(() => console.log("Admin document saved successfully"))
+                    .catch(error => console.error("Error saving admin:", error));
+            } else {
+                console.log("No new projects to add."); // Debugging if no new projects
+            }
         }
 
         // Assuming the projects are stored in the admin object
-        const projects = admin.projectData; // Adjust this based on your actual schema
+        const allProjects = admin.projectData; // Adjust this based on your actual schema
 
         // Return the projects along with a success message
-        return res.status(200).json({ success: true, message: "Projects retrieved successfully", projects });
+        return res.status(200).json({ success: true, message: "Projects updated and retrieved successfully", projects: allProjects });
         
     } catch (error) {
-        console.error("Error retrieving admin projects:", error);
-        return res.status(500).json({ success: false, message: "Failed to retrieve admin projects" });
+        console.error("Error updating and retrieving admin projects:", error);
+        return res.status(500).json({ success: false, message: "Failed to update and retrieve admin projects" });
     }
 };
- export { adminUser, registerUser, getAllAdmins ,updateAdminProjects ,getAdminAllProjects};
+
+ export { adminUser, registerUser, getAllAdmins ,updateAndGetAdminProjects};

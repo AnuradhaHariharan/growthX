@@ -25,6 +25,7 @@ const createProject = async (req, res) => {
             assignment,
             adminName,
             comments,
+            projectStatus:'',
             createdAt: new Date(), // Optionally include created timestamp
         });
 
@@ -74,5 +75,52 @@ const getProjects = async (req, res) => {
         res.status(500).json({ success: false, message: "Error fetching projects data" });
     }
 };
+// Approve a project
+const approveProject = async (req, res) => {
+    try {
+        const { projectId } = req.body;
+        console.log("Project ID:", projectId);
+        // Update project status to 'approved'
+        const project = await projectModel.findByIdAndUpdate(
+            projectId,
+            { projectStatus: 'approved' },
+            { new: true }
+        );
 
-export { getProjects ,createProject};
+        if (!project) {
+            return res.status(404).json({ success: false, message: "Project not found" });
+        }
+
+        res.json({ success: true, message: "Project approved successfully", project });
+    } catch (error) {
+        console.error("Error approving project:", error);
+        res.status(500).json({ success: false, message: "Error approving project" });
+    }
+};
+
+// Reject a project
+// Reject a project
+const rejectProject = async (req, res) => {
+    try {
+        const { projectId } = req.body;
+
+        // Update project status to 'rejected'
+        const project = await projectModel.findByIdAndUpdate(
+            projectId,
+            { projectStatus: 'rejected' },
+            { new: true }
+        );
+
+        if (!project) {
+            return res.status(404).json({ success: false, message: "Project not found" });
+        }
+
+        res.json({ success: true, message: "Project rejected successfully", project });
+    } catch (error) {
+        console.error("Error rejecting project:", error);
+        res.status(500).json({ success: false, message: "Error rejecting project" });
+    }
+};
+
+
+export { getProjects ,createProject,approveProject,rejectProject};

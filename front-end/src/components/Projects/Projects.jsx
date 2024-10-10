@@ -37,11 +37,13 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    // Ensure token is present before fetching projects
+    // Fetch projects when token becomes available
     if (token) {
       fetchProjects(); // Fetch projects when token is available
-    } 
-  }, [token]);
+    } else {
+      setProjects([]); // Clear projects if token is not present
+    }
+  }, [token, email]); // Run effect when token or email changes
 
   // If token is not present, do not render the projects section
   if (!token) {
@@ -52,7 +54,7 @@ const Projects = () => {
     <div className="projects-container" id='projects'>
       <h2 className="projects-heading">Submitted Assignments</h2>
       {loading && <p>Loading projects...</p>} {/* Show loading message */}
-      {error && <p className="error">{error}</p>} {/* Show error message */}
+      {error && <p className="error-message">{error}</p>} {/* Show error message if any */}
       <div className="projects-grid">
         {Array.isArray(projects) && projects.length > 0 ? (
           projects.map((project) => (
@@ -61,6 +63,14 @@ const Projects = () => {
               <p>{project.assignment || 'No description available.'}</p> {/* Use assignment as description */}
               <p><strong>Admin:</strong> {project.adminName}</p> {/* Display admin name */}
               <p><strong>Comments:</strong> {project.comments || 'No comments available.'}</p> {/* Display comments */}
+              <div className="status-container">
+                <h4 className="status-heading">Status of Assignment:</h4>
+                <div
+                  className={`status-badge ${project.projectStatus === 'Accepted' ? 'accepted' : project.projectStatus === 'Rejected' ? 'rejected' : ''}`}
+                >
+                  {project.projectStatus || 'No status available'}
+                </div>
+              </div>
             </div>
           ))
         ) : (

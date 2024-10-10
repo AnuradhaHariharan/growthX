@@ -40,13 +40,21 @@ const Home = () => {
     // Check if the user is logged in by verifying the presence of the token
     if (!token) {
       alert('Please log in or sign up first.');
+      // Reset form fields if not logged in
+      setFormData({
+        name: '',
+        email: email || '', // Reset to context email
+        assignment: '',
+        adminName: '',
+        comments: '',
+      });
       return; // Prevent further execution if not logged in
     }
 
     try {
       const response = await axios.post(`${url}/api/projects/create`, formData);
       
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         console.log('Assignment submitted successfully');
         // Reset form
         setFormData({
@@ -64,11 +72,28 @@ const Home = () => {
       console.error('Error submitting assignment:', error);
       
       // Check for specific error conditions
-      if ( error.response.status === 500) {
+      if (error.response && error.response.status === 500) {
         alert('You can only submit your assignment once.');
-      } 
+      }
     }
   };
+  const setEmail = () => {
+    if (token) {
+      const storedEmail = localStorage.getItem('email');
+      if (storedEmail) {
+        setFormData((prevData) => ({ ...prevData, email: storedEmail }));
+      }
+    } else {
+      // If no token, set email to an empty string
+      setFormData((prevData) => ({ ...prevData, email: '' }));
+    }
+  };
+
+  // Effect to set email whenever the token changes
+  useEffect(() => {
+    setEmail();
+  }, [token]);
+
 
   return (
     <div className='form-container'>

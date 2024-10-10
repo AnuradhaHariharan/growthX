@@ -54,5 +54,9 @@
     cursor: pointer;
 }
 .company {
-    color: tomato;
+    color: white;
+}
+.x {
+    color:tomato;
+    margin-left: -6px;
 }

@@ -5,11 +5,16 @@
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 1000;
-    background-color: white;
+    background-color: rgba(255, 255, 255, .85);
 }
 .admin {
     color: tomato;
+}
+
+.userIcon {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .navbar .logo {
@@ -141,4 +146,18 @@
 }
 .navprofile-dropdown li:hover {
     color: tomato;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start with opacity 0 */
+        transform: translateY(-20px); /* Slightly move it up */
+    }
+    to {
+        opacity: 1; /* End with full opacity */
+        transform: translateY(0); /* Move back to original position */
+    }
+}
+
+.navbar {
+    animation: fadeIn 2s ease-in-out; /* Apply the fade-in animation */
 }

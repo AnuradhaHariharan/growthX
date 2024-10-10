@@ -7,7 +7,7 @@ import { StoreContext } from '../../context/StoreContext'
 const Navbar = ({setShowLogin}) => {
 
     const [menu,setMenu]= useState("home")
-    const {token,setToken}=useContext(StoreContext);
+    const {token,setToken, email}=useContext(StoreContext);
     const navigate=useNavigate();
 
     const logout= ()=>{
@@ -28,12 +28,17 @@ const Navbar = ({setShowLogin}) => {
       </ul>
       <div className="navbar-right">
         {!token? <button onClick={()=>setShowLogin(true)}>Sign in</button>
-       : <div className='navbar-profile'>
-        <img src={assets.profile_icon} alt="" />
-        <ul className='navprofile-dropdown'>
-          <li  onClick={logout}><img src={assets.logout_icon} alt="" /><p>Logout</p></li>
-        </ul>
-       </div>  
+       : (
+       <div className='navbar-profile'>
+          <div className='userIcon'>
+            <img src={assets.profile_icon} alt="" />
+            <span>hello, {email}</span>
+          </div>
+          <ul className='navprofile-dropdown'>
+            <li  onClick={logout}><img src={assets.logout_icon} alt="" /><p>Logout</p></li>
+          </ul>
+       </div>
+       )  
       }     
       </div>
     </div>

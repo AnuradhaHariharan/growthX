@@ -56,3 +56,10 @@
 .footer-social-icons img {
     cursor: pointer;
 }
+.company {
+    color: white;
+}
+.x {
+    color:tomato;
+    margin-left: -6px;
+}

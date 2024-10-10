@@ -1,36 +1,63 @@
 .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .project-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-  }
-  
-  .project-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .project-card h3 {
-    margin: 0 0 10px;
-  }
-  
-  .project-card p {
-    margin: 0 0 15px;
-  }
-  
-  .project-card a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .project-card a:hover {
-    text-decoration: underline;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Increased min width to 300px */
+  gap: 20px;
+  padding: 20px;
+}
+
+.project-card {
+  border: 1px solid #e0e0e0; /* Light grey border for subtlety */
+  border-radius: 10px; /* Slightly increased border-radius */
+  padding: 20px; /* Increased padding for more space */
+  background-color: #ffffff; /* Clean white background */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer shadow for depth */
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+}
+
+.project-card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.project-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.5rem; /* Slightly larger font size */
+  color: #333; /* Darker text for better contrast */
+}
+
+.project-card p {
+  margin: 0 0 15px;
+  color: #555; /* Softer grey for body text */
+  line-height: 1.5; /* Improved line height for readability */
+}
+
+.project-card a {
+  color: #007bff; /* Bootstrap primary color */
+  text-decoration: none;
+  font-weight: bold; /* Make links stand out */
+}
+
+.project-card a:hover {
+  text-decoration: underline;
+}
+
+.status-container {
+  display: flex; /* Use flexbox to align items */
+  align-items: center; /* Center items vertically */
+  margin-top: 1rem; /* Add some space above */
+}
+
+.status-heading {
+  margin-right: 1rem; /* Space between heading and badge */
+  font-weight: 600; /* Semi-bold font for the heading */
+  font-size: 1.1rem; /* Slightly larger font size for the heading */
+  color: #333; /* Darker color for contrast */
+}
+
+.status-badge {
+  border-radius: 20px; /* More rounded corners for a softer look */
+  font-size: 1rem; /* Adjust font size */
+  display: inline-block; /* Make it behave like a button */
+  text-align: center; /* Center the text inside the badge */
+}
+

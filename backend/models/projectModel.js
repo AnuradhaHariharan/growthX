@@ -8,6 +8,8 @@ const projectSchema = new mongoose.Schema({
     adminName: { type: String, required: true }, // Admin's name
     comments: { type: String, required: false }, // Comments are optional
     createdAt: { type: Date, default: Date.now }, // Automatically set the creation date
+    // status: { type: String, required: false }, // Project's status
+    projectStatus: { type: String, required: false },
 }, { minimize: false }); // 'minimize: false' ensures that empty objects are saved
 
 // Create or retrieve the project model
